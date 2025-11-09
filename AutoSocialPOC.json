@@ -1,0 +1,2152 @@
+{
+  "name": "AutoSocialPOC",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "messages"
+        ],
+        "options": {}
+      },
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "typeVersion": 1,
+      "position": [
+        -3824,
+        -816
+      ],
+      "id": "19fcdf58-9733-4df3-9afe-4abd2073171e",
+      "name": "WhatsApp Trigger",
+      "webhookId": "0914801a-5932-42ae-8303-c195bfead3d1",
+      "credentials": {
+        "whatsAppTriggerApi": {
+          "id": "fFv15m9iGm6ZSDsx",
+          "name": "AutoSocial"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1280,
+        -272
+      ],
+      "id": "ac71efa7-77f7-4410-95a7-23b746173af1",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2WDXUry3HpLJAnQZ",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f936efa7-5884-40d6-b82c-5dcc742d929d",
+              "leftValue": "={{ $json.contacts[0].wa_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -3152,
+        -832
+      ],
+      "id": "51ac2c50-3913-4ad7-aac9-47aadb6809e5",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "s7wWfBrEeawMUmQu",
+          "mode": "list",
+          "cachedResultName": "users",
+          "cachedResultUrl": "/projects/9dd9MU91XCrtlFMP/datatables/s7wWfBrEeawMUmQu"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "onboarded": false,
+            "started_onboarding": false,
+            "wa_id": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}",
+            "name": "={{ $('WhatsApp Trigger').item.json.contacts[0].profile.name }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "wa_id",
+              "displayName": "wa_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "onboarded",
+              "displayName": "onboarded",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "started_onboarding",
+              "displayName": "started_onboarding",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "onboarding_start_time",
+              "displayName": "onboarding_start_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "profile_json",
+              "displayName": "profile_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "oboarding_end_time",
+              "displayName": "oboarding_end_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        -2896,
+        -480
+      ],
+      "id": "24151e41-6e27-4135-b5bb-e0d13c33fb21",
+      "name": "Insert new user"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f936efa7-5884-40d6-b82c-5dcc742d929d",
+              "leftValue": "={{ $json.started_onboarding }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -2688,
+        -848
+      ],
+      "id": "e8fdc735-4699-4906-a5f3-c77fe060baab",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "operation": "rowExists",
+        "dataTableId": {
+          "__rl": true,
+          "value": "s7wWfBrEeawMUmQu",
+          "mode": "list",
+          "cachedResultName": "users",
+          "cachedResultUrl": "/projects/9dd9MU91XCrtlFMP/datatables/s7wWfBrEeawMUmQu"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "wa_id",
+              "keyValue": "={{ $json.contacts[0].wa_id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        -3344,
+        -832
+      ],
+      "id": "5d369d41-df72-4cb2-a531-0b4711821bea",
+      "name": "User exist",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9a5be4b7-d0ce-4582-91f0-00c9eb0cc0c7",
+              "name": "=Message",
+              "value": "={{$('WhatsApp Trigger').item.json.messages[0].type == \"text\" ? $('WhatsApp Trigger').item.json.messages[0].text.body : $('Analyze image').item.json.content.parts[0].text +\" Descripcion del usuario: \"+ $('WhatsApp Trigger').item.json.messages[0].image.caption}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1408,
+        -496
+      ],
+      "id": "99c7fd3e-9591-4aa0-9570-506c5ae75790",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "resource": "media",
+        "operation": "mediaUrlGet",
+        "mediaGetId": "={{ $('WhatsApp Trigger').item.json.messages[0].image.id }}"
+      },
+      "id": "5e796772-1ee6-469e-91c9-ce9c90abec8a",
+      "name": "Create Audio Download link ",
+      "type": "n8n-nodes-base.whatsApp",
+      "position": [
+        -1888,
+        -320
+      ],
+      "webhookId": "0572f94a-ca8a-4f15-86cd-3b88c2e0fb6e",
+      "typeVersion": 1,
+      "credentials": {
+        "whatsAppApi": {
+          "id": "XZTLy3h5ptUQAmPv",
+          "name": "AutoSocial"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "text": "Analiza la imagen. Extrae todos los detalles posibles sobre colores, estilo grafico y demas elementos de diseño",
+        "inputType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1568,
+        -320
+      ],
+      "id": "a0d85bb8-db61-452e-a42f-a402ead1803c",
+      "name": "Analyze image",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2WDXUry3HpLJAnQZ",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "whatsAppApi",
+        "options": {}
+      },
+      "id": "7b546256-2ebd-4e84-b498-f6b319b427f3",
+      "name": "Download image",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        -1728,
+        -320
+      ],
+      "typeVersion": 4.2,
+      "credentials": {
+        "whatsAppApi": {
+          "id": "XZTLy3h5ptUQAmPv",
+          "name": "AutoSocial"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Update row in the Data table",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "s7wWfBrEeawMUmQu",
+          "mode": "list",
+          "cachedResultName": "users",
+          "cachedResultUrl": "/projects/9dd9MU91XCrtlFMP/datatables/s7wWfBrEeawMUmQu"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "wa_id",
+              "keyValue": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "profile_json": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('profile_json', ``, 'string') }}",
+            "oboarding_end_time": "={{ $now }}",
+            "onboarded": true
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "wa_id",
+              "displayName": "wa_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "onboarded",
+              "displayName": "onboarded",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "started_onboarding",
+              "displayName": "started_onboarding",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "onboarding_start_time",
+              "displayName": "onboarding_start_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "profile_json",
+              "displayName": "profile_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "oboarding_end_time",
+              "displayName": "oboarding_end_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTableTool",
+      "typeVersion": 1,
+      "position": [
+        -944,
+        -272
+      ],
+      "id": "98922a98-f0dd-4afc-92a4-67b61f4a9701",
+      "name": "Update_client"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "847932621737694",
+        "recipientPhoneNumber": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}",
+        "textBody": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        -864,
+        -496
+      ],
+      "id": "b0bcd5c6-0191-4d11-9fff-767a2ada8c79",
+      "name": "Send message",
+      "webhookId": "e6d85310-e072-4359-b14a-00a6ed756fc5",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "XZTLy3h5ptUQAmPv",
+          "name": "AutoSocial"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1104,
+        -272
+      ],
+      "id": "5f87d4d6-a27b-45e6-8697-28317a3be095",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "options": {
+          "maxOutputTokens": 4096,
+          "temperature": 0.4
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1648,
+        -768
+      ],
+      "id": "51d799f3-060b-4dff-98d1-7c617e174864",
+      "name": "Google Gemini Chat Model2",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2WDXUry3HpLJAnQZ",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1488,
+        -768
+      ],
+      "id": "36d55862-b148-4274-b20e-705bef17c3f7",
+      "name": "Simple Memory1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f936efa7-5884-40d6-b82c-5dcc742d929d",
+              "leftValue": "={{ $('Get row(s)1').item.json.onboarded }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -2448,
+        -864
+      ],
+      "id": "df86fb82-7640-4af6-99e8-b89e85bafa1a",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "s7wWfBrEeawMUmQu",
+          "mode": "list",
+          "cachedResultName": "users",
+          "cachedResultUrl": "/projects/9dd9MU91XCrtlFMP/datatables/s7wWfBrEeawMUmQu"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "wa_id",
+              "keyValue": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "started_onboarding": true,
+            "onboarding_start_time": "={{ $now }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "wa_id",
+              "displayName": "wa_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "active",
+              "displayName": "active",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "onboarded",
+              "displayName": "onboarded",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "started_onboarding",
+              "displayName": "started_onboarding",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "q1_answer",
+              "displayName": "q1_answer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "q2_answer",
+              "displayName": "q2_answer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "q3_answer",
+              "displayName": "q3_answer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "q4_answer",
+              "displayName": "q4_answer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "q5_answer",
+              "displayName": "q5_answer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "onboarding_start_time",
+              "displayName": "onboarding_start_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        -2480,
+        -480
+      ],
+      "id": "e4da2bf5-b2d0-4e98-8117-dd2edf5ebcee",
+      "name": "Starting Onboarding",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a1463af2-035a-4f68-be48-30065b7fee0c",
+              "name": "WaID",
+              "value": "={{ $json.wa_id }}",
+              "type": "string"
+            },
+            {
+              "id": "8f6045cc-1dc3-4ee5-8e55-d2b215d0dfe3",
+              "name": "Name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "a0eca286-aef0-4443-8d7e-595f1091a35e",
+              "name": "Mensaje",
+              "value": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}",
+              "type": "string"
+            },
+            {
+              "id": "e2e6a675-2978-4bfd-984c-b9d4faa9b484",
+              "name": "Profile",
+              "value": "={{ $('Get row(s)1').item.json.profile_json }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1632,
+        -1040
+      ],
+      "id": "2a14a1ba-6e49-428b-8f02-500cc4a3aa2a",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "de6714de-2f8b-4b1e-a529-01a0ad801369",
+              "leftValue": "={{ $json.messages }}",
+              "rightValue": "",
+              "operator": {
+                "type": "array",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -3616,
+        -816
+      ],
+      "id": "250f6f43-9f3d-4c52-9603-353877172b48",
+      "name": "If3"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "s7wWfBrEeawMUmQu",
+          "mode": "list",
+          "cachedResultName": "users",
+          "cachedResultUrl": "/projects/9dd9MU91XCrtlFMP/datatables/s7wWfBrEeawMUmQu"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "wa_id",
+              "keyValue": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        -2896,
+        -848
+      ],
+      "id": "fc25d12e-172c-4f70-ae9c-d4bae5daf059",
+      "name": "Get row(s)1"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('WhatsApp Trigger').item.json.messages[0].type }}",
+                    "rightValue": "text",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "6f771962-c8b5-4237-92db-7e687ec4dd89"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Text"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "ac93dcab-8d78-4202-8eb9-7e1e235860f8",
+                    "leftValue": "={{ $('WhatsApp Trigger').item.json.messages[0].type }}",
+                    "rightValue": "image",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Image"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -2128,
+        -480
+      ],
+      "id": "5cf1f03e-07cf-4980-b759-a5e4ff06c5fd",
+      "name": "Switch2"
+    },
+    {
+      "parameters": {
+        "description": "Utiliza esta herramienta para crear una publicación de Facebook con un mensaje y una imagen mediante el enlace de descarga de Google Drive (driveId).",
+        "workflowId": {
+          "__rl": true,
+          "value": "A2vFe73gdjbc7alu",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/A2vFe73gdjbc7alu",
+          "cachedResultName": "Make Facebook Post"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Post Text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Post_Text', `The text to add to the facebook post`, 'string') }}",
+            "driveId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('driveId', `driveId`, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "driveId",
+              "displayName": "driveId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Post Text",
+              "displayName": "Post Text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        -1136,
+        -768
+      ],
+      "id": "c06b5088-65cf-422c-85de-c6379dc5ae11",
+      "name": "Make_Facebook_Post"
+    },
+    {
+      "parameters": {
+        "description": "=Use this tool to generate the sample Facebook posts and send them to the user for approval. The inputs must be a clear and professional prompt, including all the necessary descriptions and details for generating the image.\nTool output:\n1. whatsAppId: The WhatsApp Media ID to send the generated image with the WhatsApp tool.\n2. driveName: The name of the file saved in Google Drive.\n3. driveLink: The URL to download the file saved in Google Drive.",
+        "workflowId": {
+          "__rl": true,
+          "value": "gxhqW8icmrWhvef2",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/gxhqW8icmrWhvef2",
+          "cachedResultName": "Create Facebook Image"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Image_Prompt": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Image_Prompt', `Instructions for generating the image`, 'string') }}",
+            "WaID": "={{ $json.WaID }}"
+          },
+          "matchingColumns": [
+            "Image_Prompt"
+          ],
+          "schema": [
+            {
+              "id": "Image_Prompt",
+              "displayName": "Image_Prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "WaID",
+              "displayName": "WaID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        -1312,
+        -768
+      ],
+      "id": "3246d4fd-3678-4072-87fc-8bd829b220f7",
+      "name": "Create_Facebook_Image"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.type }}",
+                    "rightValue": "text",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "2fb689b9-e5a5-4c45-8af6-dadd43f22844"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "text"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "7118bc36-f0be-430e-82c1-00dd2d6d8079",
+                    "leftValue": "={{ $json.output.type }}",
+                    "rightValue": "image",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "image"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -992,
+        -1040
+      ],
+      "id": "5c99ee9e-0448-422e-9c88-a17c27354a16",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "847932621737694",
+        "recipientPhoneNumber": "={{ $('Edit Fields1').item.json.WaID }}",
+        "textBody": "={{ $json.output.message }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        -768,
+        -1136
+      ],
+      "id": "97c93f5b-e2ff-4f6d-a0e7-ec5280534044",
+      "name": "Send message1",
+      "webhookId": "17fc296d-e79f-4f76-af17-21361ae3bf6d",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "XZTLy3h5ptUQAmPv",
+          "name": "AutoSocial"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "847932621737694",
+        "recipientPhoneNumber": "={{ $('Edit Fields1').item.json.WaID }}",
+        "messageType": "image",
+        "mediaPath": "useMedian8n",
+        "additionalFields": {
+          "mediaCaption": "={{ $json.output.message }}"
+        }
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        -576,
+        -944
+      ],
+      "id": "8b9e25a8-5def-49e7-bb4b-2e3cc012698f",
+      "name": "Send Image",
+      "webhookId": "e0c42cd7-b6dd-45ae-a474-b7385c79a62e",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "XZTLy3h5ptUQAmPv",
+          "name": "AutoSocial"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"text | image\", \n  \"message\": \"text ()\", \n  \"imageID\": \"text\" \n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -832,
+        -768
+      ],
+      "id": "bb4834bc-d32d-482b-96ee-cdb7452dca2a",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.output.imageID }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -768,
+        -944
+      ],
+      "id": "d986d83f-426b-4cb7-a6ca-f341fb3aac52",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "fs5iKhcCUZY4vMeW",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Update row in the Data table",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "s7wWfBrEeawMUmQu",
+          "mode": "list",
+          "cachedResultName": "users",
+          "cachedResultUrl": "/projects/9dd9MU91XCrtlFMP/datatables/s7wWfBrEeawMUmQu"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "wa_id",
+              "keyValue": "={{ $('Edit Fields1').item.json.WaID }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "demo_completed": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('demo_completed', `Mark true when the user is ready to move to the survey (encuesta)`, 'boolean') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "wa_id",
+              "displayName": "wa_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "onboarded",
+              "displayName": "onboarded",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "started_onboarding",
+              "displayName": "started_onboarding",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "onboarding_start_time",
+              "displayName": "onboarding_start_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "profile_json",
+              "displayName": "profile_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "oboarding_end_time",
+              "displayName": "oboarding_end_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "survey_completed",
+              "displayName": "survey_completed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "demo_completed",
+              "displayName": "demo_completed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "user_feedback",
+              "displayName": "user_feedback",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTableTool",
+      "typeVersion": 1,
+      "position": [
+        -976,
+        -768
+      ],
+      "id": "a6bdef6c-2292-4b1c-88c7-07e036a3474d",
+      "name": "Update_client1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f936efa7-5884-40d6-b82c-5dcc742d929d",
+              "leftValue": "={{ $('Get row(s)1').item.json.demo_completed }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -2256,
+        -1056
+      ],
+      "id": "4ee9b1f2-bdfc-488b-97e8-a7f3185942f8",
+      "name": "If4"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "847932621737694",
+        "recipientPhoneNumber": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}",
+        "textBody": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        -1264,
+        -1600
+      ],
+      "id": "828211a9-12a7-4c41-8be6-0b986e02c007",
+      "name": "Send message2",
+      "webhookId": "17fc296d-e79f-4f76-af17-21361ae3bf6d",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "XZTLy3h5ptUQAmPv",
+          "name": "AutoSocial"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1616,
+        -1424
+      ],
+      "id": "5619cf89-5f1b-4e2c-8f04-484da7585dfe",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2WDXUry3HpLJAnQZ",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1456,
+        -1424
+      ],
+      "id": "757271ed-6dc6-4ff7-b8c0-99899febef82",
+      "name": "Simple Memory2"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Update row in the Data table",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "s7wWfBrEeawMUmQu",
+          "mode": "list",
+          "cachedResultName": "users",
+          "cachedResultUrl": "/projects/9dd9MU91XCrtlFMP/datatables/s7wWfBrEeawMUmQu"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "wa_id",
+              "keyValue": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "user_feedback": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('user_feedback', ``, 'string') }}",
+            "survey_completed": true
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "wa_id",
+              "displayName": "wa_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "onboarded",
+              "displayName": "onboarded",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "started_onboarding",
+              "displayName": "started_onboarding",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "onboarding_start_time",
+              "displayName": "onboarding_start_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "profile_json",
+              "displayName": "profile_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "oboarding_end_time",
+              "displayName": "oboarding_end_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "survey_completed",
+              "displayName": "survey_completed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "demo_completed",
+              "displayName": "demo_completed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "user_feedback",
+              "displayName": "user_feedback",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTableTool",
+      "typeVersion": 1,
+      "position": [
+        -1312,
+        -1424
+      ],
+      "id": "4b437064-e486-4538-be93-ab09ce6088b9",
+      "name": "Save_Feedback"
+    },
+    {
+      "parameters": {
+        "content": "## Recolecta Feedback de Cliente\n",
+        "height": 448,
+        "width": 624
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1696,
+        -1696
+      ],
+      "typeVersion": 1,
+      "id": "36f81258-f41b-4cdb-a67a-df9786b52755",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Crea Perfil De Cliente\n",
+        "height": 480,
+        "width": 1552,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2208,
+        -592
+      ],
+      "typeVersion": 1,
+      "id": "e25417f1-dafe-4114-b4e2-7bb8fb6cbf3f",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Crea Post en Facebook",
+        "height": 576,
+        "width": 1296,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1696,
+        -1216
+      ],
+      "typeVersion": 1,
+      "id": "de4f7805-fbc7-4047-bd62-ff69c5c3a44d",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Logica del flujo basado en flags de estado",
+        "height": 592,
+        "width": 1616,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -3872,
+        -912
+      ],
+      "typeVersion": 1,
+      "id": "b8e4328b-d7a4-44ad-a3a4-038c74fd0efe",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 352,
+        "width": 528,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2272,
+        -1264
+      ],
+      "typeVersion": 1,
+      "id": "f56b504f-1d4d-455c-ad4c-74837ff2149c",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f936efa7-5884-40d6-b82c-5dcc742d929d",
+              "leftValue": "={{ $('Get row(s)1').item.json.survey_completed }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -2080,
+        -1120
+      ],
+      "id": "ea886d4b-2077-4678-b52b-79ea50a6260f",
+      "name": "If5"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "847932621737694",
+        "recipientPhoneNumber": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}",
+        "textBody": "=🥳¡Has finalizado la prueba de nuestro POC! 🥳\n\nTu ayuda es muy importante para nosotros, gracias por participar. 🙏🏼\n\nTe informaremos cuando la siguiente versión esté lista para ser probada.\n\n¡Saludos!",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        -1920,
+        -1248
+      ],
+      "id": "5ad16d46-d9bf-4cb4-9b4c-2289176000fe",
+      "name": "Send message3",
+      "webhookId": "1422903f-21dd-46a2-8344-c6d8715fe1e7",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "XZTLy3h5ptUQAmPv",
+          "name": "AutoSocial"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}",
+        "options": {
+          "systemMessage": "=Eres un especialista en recolectar feedback de usuarios de POC en Costa Rica. Tu misión es obtener retroalimentación honesta y detallada sobre la experiencia del usuario.\n\nCONTEXTO\nEl usuario acaba de completar un POC donde:\n1. Respondió preguntas sobre su negocio\n2. Vio 3 posts generados por AI\n3. Publicó uno en Facebook de prueba\n\nFLUJO DE ENCUESTA (4 preguntas)\n\nPREGUNTA 1: Comprensión del Negocio\nEnvía exactamente este mensaje:\n\n\"🎉 ¡ÉXITO! Acabas de ver el proceso completo.\n\nAhora la parte más importante... tu feedback honesto:\n\n1️⃣ Del 1-10, ¿qué tan bien entendí tu negocio?\n(1=terrible, 10=perfecto)\n\nSolo el número está bien 👍\"\n\nEspera respuesta → Guarda el score → Continúa\n\nPREGUNTA 2: Calidad de Contenido\nEnvía:\n\n\"2️⃣ Del 1-10, ¿qué calidad tenían los posts?\n(1=muy malos, 10=excelentes)\n\nTu opinión honesta 🙏\"\n\nEspera respuesta → Guarda el score → Continúa\n\nPREGUNTA 3: Intención de Pago\nEnvía:\n\n\"3️⃣ Si este servicio costara ¢15,000/mes (3 posts semanales automáticos), ¿lo contratarías?\n\n[Definitivamente sí]\n[Probablemente sí]\n[Tal vez]\n[Probablemente no]\n[Definitivamente no]\n\nSé sincero, no hay respuesta mala 😊\"\n\nEspera respuesta → Guarda la respuesta → Continúa\n\nPREGUNTA 4: Feedback Abierto\nEnvía:\n\n\"4️⃣ ¿Qué mejorarías o cambiarías?\n\n(Cualquier cosa, sé honesto. Esto me ayuda a mejorar el servicio)\"\n\nEspera respuesta → Documenta TODO lo que diga\n\nGUARDAR FEEDBACK\nIMPORTANTE: Ejecuta la herramienta Save_Feedback pasando este JSON como parámetro.\nNO muestres el JSON al usuario.\nNO incluyas el JSON en tu respuesta.\nSimplemente llama la herramienta silenciosamente.\n\nJSON a guardar:\n{\n  \"understanding_score\": número_del_1_al_10,\n  \"content_quality_score\": número_del_1_al_10,\n  \"willingness_to_pay\": \"texto_exacto_de_respuesta\",\n  \"improvements_feedback\": \"texto_completo_palabra_por_palabra\",\n  \"timestamp\": \"2025-11-07T15:30:00Z\"\n}\n\nMENSAJE FINAL\nDespués de ejecutar Save_Feedback, envía SOLO este mensaje:\n\n\"Muchísimas gracias por tu tiempo y honestidad! 🙏\n\nTu feedback es super valioso para mejorar el servicio.\n\n¡Pura vida! 😊\"\n\nREGLAS CRÍTICAS\n- Una pregunta a la vez\n- Espera respuesta antes de continuar\n- NO presiones al usuario\n- Si da respuesta vaga en P4, pregunta: \"¿Algo específico del contenido, el proceso, o el precio?\"\n- Documenta TODO el feedback textual palabra por palabra\n- Tono amigable, agradecido, no defensivo\n- Si critica algo, responde: \"Gracias por la honestidad, eso me ayuda mucho 🙏\"\n- NO argumentes o justifiques nada\n- NO vendas, solo recolecta feedback\n- NO muestres el JSON al usuario en ningún momento\n- Ejecuta Save_Feedback silenciosamente\n\nMANEJO DE RESPUESTAS\nSi da score muy bajo (1-4):\n\"Gracias por la honestidad. ¿Me ayudas a entender qué falló específicamente?\"\n→ Documenta la respuesta adicional\n\nSi da score alto (9-10):\n\"¡Qué bueno que te gustó! 🎉\"\n\nSi menciona precio alto en P3:\n\"Entiendo. ¿Cuánto sería un precio justo para vos?\"\n→ Documenta la respuesta en improvements_feedback\n\nSi pide features en P4:\n\"Excelente idea, lo anoto 📝 ¿Algo más?\"\n→ Documenta todo en improvements_feedback\n\nMANEJO DE ERRORES\nSi Save_Feedback falla:\n\"Un momento...\" → Reintenta 1 vez → Si falla: Envía el mensaje final de todas formas",
+          "passthroughBinaryImages": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -1600,
+        -1600
+      ],
+      "id": "b8a6cf05-c325-46e5-acb4-0a5083862efa",
+      "name": "Feedback Agent"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.Mensaje }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=🚨 REGLA #1 ABSOLUTA - LEE ESTO PRIMERO 🚨\n\nTu ÚNICA forma de comunicarte es JSON PURO.\n\nNO uses bloques de código markdown (```json)\nNO uses backticks\nNO uses formateo markdown\n\nSOLO el JSON directo:\n{\"type\": \"text\", \"message\": \"...\", \"imageID\": \"\"}\n\nEjemplo CORRECTO:\n{\"type\": \"text\", \"message\": \"Hola\", \"imageID\": \"\"}\n\nEjemplo INCORRECTO:\n```json\n{\"type\": \"text\", \"message\": \"Hola\", \"imageID\": \"\"}\n```\n\n═══════════════════════════════════════\n🎭 TU ROL\n═══════════════════════════════════════\n\nAgente de Marketing para PYMES costarricenses.\nCreas posts de Facebook vía WhatsApp en 4 pasos.\n\n═══════════════════════════════════════\n🔧 HERRAMIENTAS\n═══════════════════════════════════════\n\nCreate_Facebook_Image(image_prompt)\n→ Retorna: {driveId: \"1Abc...\"}\n\nMake_Facebook_Post(Post Text, driveId)\n→ Retorna: {PostId: \"1263...\"}\n\nUpdate_client1()\n→ Retorna: {User Data: JSON}\n\n\n═══════════════════════════════════════\n🔄 FLUJO CON JSON OBLIGATORIO\n═══════════════════════════════════════\n\n┌────────────────────────────────────┐\n│ PASO 1: PROPONER ESTRATEGIA       │\n└────────────────────────────────────┘\n\nAnaliza fecha/temporada Costa Rica y propón 1 post.\n\nRESPONDE EXACTAMENTE ASÍ (sin ```json):\n{\"type\": \"text\", \"message\": \"¡Hola [business_name]! 👋\\n\\nTe recomiendo:\\n📅 POST: [Tipo] - [Tema] | [Día] [Hora]\\n\\n¿Te parece? 🚀\", \"imageID\": \"\"}\n\n🛑 ESPERA respuesta\nSi acepta → PASO 2\n\n┌────────────────────────────────────┐\n│ PASO 2: 3 OPCIONES DE TEXTO       │\n└────────────────────────────────────┘\n\nGenera A, B, C con:\n- 40-80 palabras (máx 120)\n- Gancho + Cuerpo + CTA\n- 3-5 hashtags + #CostaRica\n- Emojis según {{ $json.Profile.use_of_emojis }}:\n  - ninguno = 0 emojis\n  - ocasional = 2-4 emojis\n  - frecuente = 5-8 emojis\n- Solo {{ $json.Profile.temas_a_cubrir }}\n\nRESPONDE EXACTAMENTE ASÍ (sin ```json):\n{\"type\": \"text\", \"message\": \"📱 3 opciones:\\n\\n✨ A:\\n[texto]\\n\\n✨ B:\\n[texto]\\n\\n✨ C:\\n[texto]\\n\\n¿Cuál? (A/B/C)\", \"imageID\": \"\"}\n\n🛑 ESPERA respuesta\nCuando elija → GUARDA: texto_final = [texto exacto elegido]\n→ PASO 3\n\n┌────────────────────────────────────┐\n│ PASO 3: GENERAR IMAGEN            │\n└────────────────────────────────────┘\n\nA) Construye image_prompt con:\n   • Sujeto: 3 oraciones descriptivas\n   • Contexto costarricense: playas/montañas/fauna tropical\n   • Estilo: {{ $json.Profile.estilo_diseño }}\n   • Colores en ESPAÑOL (traduce hex):\n     #FF0000=rojo vibrante, #FFFFFF=blanco puro, #00FF00=verde brillante\n     #0000FF=azul intenso, #FFA500=naranja cálido, #FFD700=dorado\n   • Técnico: horizontal panorámico, sin texto en imagen\n   • Excluir: letras, números, {{ $json.Profile.temas_a_evitar }}\n\nB) Ejecuta: Create_Facebook_Image con tu prompt\n   \nC) La herramienta retorna: {driveId: \"1Pbql...\"}\n   \n   🎯 GUARDA: imagen_id = driveId\n\nD) RESPONDE EXACTAMENTE ASÍ (sin ```json):\n{\"type\": \"image\", \"message\": \"✅ Post listo!\\n\\n[texto_final completo]\\n\\n━━━━━━━━━━━━━━━━━━━━\\n\\nEscribe APROBAR para publicar 🚀\", \"imageID\": \"[imagen_id]\"}\n\n🛑 ESPERA respuesta\nSi APROBAR → PASO 4\nSi pide cambios → Ajusta según solicitud\n\n┌────────────────────────────────────┐\n│ PASO 4: PUBLICAR                  │\n└────────────────────────────────────┘\n\nA) Verifica que tienes:\n   ✓ texto_final\n   ✓ imagen_id\n   \n   Si falta → RESPONDE (sin ```json):\n   {\"type\": \"text\", \"message\": \"⚠️ Error: Falta información. Reiniciemos.\", \"imageID\": \"\"}\n\nB) Ejecuta Make_Facebook_Post:\n   {\"Post Text\": \"[texto_final]\", \"driveId\": \"[imagen_id]\"}\n\nC) Recibes: {PostId: \"1263...\"}\n\nD) RESPONDE EXACTAMENTE ASÍ (sin ```json):\n{\"type\": \"text\", \"message\": \"🎉 ¡Publicado!\\n\\n🔗 https://www.facebook.com/photo?fbid=[PostId]\\n\\n¿Otro post?\\n\\nPasar a la encuesta?\", \"imageID\": \"\"}\n\nE) Siguiente acción\n🛑 ESPERA respuesta\nSi pide Otro post → PASO 1\nSi pide Pasar a la encuesta → 1. Ejecuta: Update_client1, 2. RESPONDE EXACTAMENTE ASÍ: \"Perfecto, tu opinión vale oro para nosotros\\n\\nEscribe: Iniciar cuando estes listo\"\n\n═══════════════════════════════════════\n✅ CHECKLIST PRE-ENVÍO\n═══════════════════════════════════════\n\nAntes de CADA respuesta:\n□ ¿Es JSON puro? (sin ```json ni ```)\n□ ¿Tiene {\"type\": ...?\n□ ¿Tiene \"message\": ...?\n□ ¿Tiene \"imageID\": ...?\n□ ¿Todo entre comillas?\n□ ¿Cerré }?\n\n═══════════════════════════════════════\n📊 VARIABLES A RECORDAR\n═══════════════════════════════════════\n\n1. texto_final\n   • Guarda en: PASO 2\n   • Usa en: PASO 3 (mensaje) y PASO 4 (publicar)\n   \n2. imagen_id\n   • Guarda en: PASO 3 (driveId de Create_Facebook_Image)\n   • Usa en: PASO 3 (imageID) y PASO 4 (publicar)\n\n═══════════════════════════════════════\n⚠️ ERRORES CRÍTICOS A EVITAR\n═══════════════════════════════════════\n\n❌ NUNCA uses:\n```json\n{\"type\": \"text\"}\n```\n\n❌ NUNCA uses:\n`{\"type\": \"text\"}`\n\n✅ SIEMPRE usa:\n{\"type\": \"text\", \"message\": \"...\", \"imageID\": \"\"}\n\n❌ NO respondas en texto plano\n❌ NO inventes driveId\n❌ NO olvides imageID (aunque esté vacío)\n❌ NO te salgas de tu rol, no hables de temas fuera de tu rol.\n\n✅ DETENTE después de cada JSON\n✅ Usa driveId exacto de herramienta\n✅ JSON puro directo\n✅ Si el usuario te pide o habla de temas fuera de tu propósito, guíalo de forma amable de vuelta al tema.\n═══════════════════════════════════════\n\nDatos: {{ $json.Profile }}\n\nCampos disponibles: business_name, tone, formality_level, \nuse_of_emojis, colores_primarios, colores_secundarios, \nestilo_diseño, temas_a_cubrir, temas_a_evitar, \npreferencias_de_llamada_a_la_accion\n\n═══════════════════════════════════════\n\n🚀 RESPONDE AHORA en PASO 1 con JSON PURO (sin markdown) saludando a {{ $json.Profile.business_name }}",
+          "passthroughBinaryImages": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -1344,
+        -1040
+      ],
+      "id": "ebaf7f75-9096-430f-97d0-3351e7b786a5",
+      "name": "Post Agent"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.Message }}",
+        "options": {
+          "systemMessage": "=Eres especialista en crear perfiles de negocio para PYMEs costarricenses. Tu output es JSON estructurado para generar contenido en redes sociales.\n\nFORMATO DE OUTPUT\n- Durante conversación (PASOS 1-4): Texto natural y conversacional\n- Al generar JSON (PASO 5): Objeto JSON válido\n- Al guardar (PASO 6): Ejecuta herramienta Update_client (NO muestres el JSON al usuario)\n\nFLUJO (7 PASOS)\n\nPASO 1: RECOLECTAR\nHaz estas 5 preguntas (una a la vez, tono amigable):\n1. \"¡Hola! Cuéntame sobre tu negocio en 2-3 frases: ¿Qué ofreces y qué te hace diferente?\"\n2. \"¿Quién es tu cliente ideal? (Edad, género, ubicación, ingresos, intereses)\"\n3. \"Si tu marca fuera una persona, ¿cómo hablaría? (Profesional, amigable, divertida, educativa...)\"\n4. \"¿Vocabulario sencillo o técnico? ¿Oraciones cortas o elaboradas? ¿Modismos ticos? ¿Emojis?\"\n5. \"Identidad visual de tu marca. ¿Qué colores tiene tu marca? Por ejemplo: azul marino, verde menta, rojo... ¿Y qué estilo visual te gusta? (Moderno, tradicional, minimalista, atrevido, otro). Puedes enviar tu logo u otra imagen para usarla como referencia\"\n\nPASO 2: ANALIZAR\nMientras conversas:\n- Captura info explícita\n- Infiere business_type si no lo dice (\"vendo ropa\" = \"Retail/Tienda de ropa\")\n- Convierte colores mencionados a códigos hex para el JSON:\n  * Azul oscuro/marino → #1565C0\n  * Azul claro/celeste → #1E88E5\n  * Verde oscuro → #43A047\n  * Verde menta/claro → #A8DDCF\n  * Rojo → #D32F2F\n  * Naranja → #FFA726\n  * Amarillo → #FFF176\n  * Rosa → #EC407A\n  * Morado → #AB47BC\n  * Gris → #78909C\n  * Negro → #37474F\n  * Blanco → #FFFFFF\n- Si no menciona colores, sugiere según industria (en lenguaje natural):\n  * Alimentos/Restaurantes: rojos, naranjas, amarillos\n  * Salud/Fitness: verdes, azules\n  * Belleza: rosas, morados\n  * Tecnología: azules, grises\n  * Profesional/Corporativo: azul oscuro, gris, negro\n\nPASO 3: PRESENTAR RESUMEN\nMuestra los colores en lenguaje natural (NO en códigos hex):\n\n📋 [Nombre del Negocio] - [Tipo]\n- Descripción: [2-3 líneas]\n- Valor único: [1 línea]\n- Público: [resumen demográfico]\n- Personalidad: [3 traits] | Tono: [tono] | [formal/semiformal/informal]\n- Visual: Colores [verde menta y blanco] | Estilo [moderno y minimalista]\n\n\"¿Este perfil representa correctamente tu negocio? ¿Algo que cambiar?\"\n\nPASO 4: ITERAR\nSi pide cambios → ajusta y repite PASO 3\nSi aprueba → \"¡Perfecto! Voy a generar tu perfil completo ahora.\"\n\nPASO 5: GENERAR JSON (para uso interno, NO lo muestres al usuario)\nValida antes de generar:\n✓ business_name existe\n✓ 3+ personality_traits\n✓ 2+ colores (convertidos a hex internamente)\n✓ tone y formality_level definidos\n\nSi falta algo crítico, haz pregunta específica. Si todo OK, genera este JSON (convirtiendo los colores a hex):\n\n{\n  \"business_description\": {\n    \"business_name\": \"string\",\n    \"business_type\": \"string\",\n    \"description\": \"string de 2-3 oraciones\",\n    \"unique_value_proposition\": \"string\"\n  },\n  \"audience_description\": \"string detallado con edad, género, ubicación, ingresos, intereses, dolores, comportamientos\",\n  \"brand_voice\": {\n    \"personality_traits\": [\"trait1\", \"trait2\", \"trait3\"],\n    \"tone\": \"string\",\n    \"formality_level\": \"formal/semiformal/informal\",\n    \"language_style\": {\n      \"vocabulary\": \"sencillo/técnico/elevado\",\n      \"sentence_structure\": \"corta/media/larga\",\n      \"use_of_slang\": true,\n      \"use_of_emojis\": \"ninguno/ocasional/frecuente\",\n      \"costarrican_localization\": true\n    },\n    \"do_say\": [\"frase ejemplo 1\", \"frase ejemplo 2\"],\n    \"dont_say\": [\"frase a evitar 1\"]\n  },\n  \"identidad_visual\": {\n    \"colores_primarios\": [\"#HEXCODE\", \"#HEXCODE\"],\n    \"colores_secundarios\": [\"#HEXCODE\"],\n    \"url_logotipo\": null,\n    \"estilo_diseño\": \"moderno/tradicional/minimalista/atrevido\",\n    \"preferencias_visuales\": {\n      \"tipo_imagen\": \"fotografía/ilustraciones/mixto\",\n      \"estética\": \"limpio/colorido/apagado\",\n      \"estilo_tipográfico\": \"serif/sans-serif/manuscrito\"\n    }\n  },\n  \"estrategia_contenido\": {\n    \"objetivos_primarios\": [\"objetivo1\", \"objetivo2\"],\n    \"tipos_contenido\": [\"tipo1\", \"tipo2\"],\n    \"frecuencia_de_publicación\": \"string\",\n    \"formatos_preferidos\": [\"formato1\"],\n    \"temas_a_cubrir\": [\"tema1\"],\n    \"temas_a_evitar\": [],\n    \"preferencias_de_llamada_a_la_accion\": [\"cta1\"]\n  },\n  \"contexto_competitivo\": {\n    \"competidores\": [],\n    \"puntos_de_diferenciación\": [],\n    \"marcas_de_inspiración\": []\n  },\n  \"contexto_adicional\": {\n    \"redes_sociales\": {\n      \"instagram\": null,\n      \"facebook\": null,\n      \"tiktok\": null\n    },\n    \"existing_content_style\": null,\n    \"special_requirements\": null\n  },\n  \"profile_created_at\": \"2025-11-07T10:30:00Z\",\n  \"last_updated\": \"2025-11-07T10:30:00Z\"\n}\n\nPASO 6: GUARDAR\nIMPORTANTE: Ejecuta la herramienta Update_client pasando el JSON como parámetro.\nNO muestres el JSON al usuario.\nNO incluyas el JSON en tu respuesta.\nSimplemente llama la herramienta silenciosamente.\n\nDespués de ejecutar Update_client, envía SOLO este mensaje:\n\n\"✅ ¡Perfecto! Tu perfil de negocio ha sido guardado exitosamente.\n\nTu perfil ya está listo para comenzar a crear contenido profesional para tus redes sociales.\n\n🚀 ¿Te gustaría que creemos tu primera publicación para Facebook ahora mismo?\n\nPuedo ayudarte a crear un post profesional perfectamente alineado con tu marca.\"\n\nPASO 7: RESPUESTAS\n- Si dice \"Sí\"/\"Claro\"/\"Dale\" → \"¡Excelente! Te voy a conectar con nuestro especialista en creación de contenido. En un momento continuamos con tu primera publicación. 🎨\" → DETENTE COMPLETAMENTE\n- Si dice \"No\"/\"Después\" → \"¡Perfecto! Cuando estés listo para crear contenido, con gusto te ayudamos. Tu perfil ya está guardado y listo para usar. 😊 ¿Hay algo más en lo que pueda ayudarte hoy?\"\n- Si tiene dudas → \"Podemos crear posts profesionales para Facebook con imágenes generadas por IA, perfectamente alineados con los colores y el tono de tu marca. Todo lo hacemos por WhatsApp, súper fácil. ¿Te animas?\" → Espera respuesta y procede según sea Sí o No\n\nREGLAS CRÍTICAS\n- Una pregunta a la vez, espera respuesta\n- Tono conversacional y amigable, nunca robotizado\n- Habla en lenguaje simple: usa nombres de colores (verde, azul), NO códigos hex\n- Convierte colores a hex solo internamente para el JSON\n- Si info es vaga, haz seguimiento con preguntas específicas\n- NO inventes información\n- NO generes JSON hasta que el cliente apruebe el resumen\n- NO muestres el JSON al usuario en ningún momento\n- Ejecuta Update_client silenciosamente (el usuario no debe ver el JSON)\n- NO crees contenido en este agente, solo ofrece y transfiere\n- Si el cliente se sale del tema: \"Mi especialidad es ayudarte a crear tu perfil. ¿Continuamos?\"\n\nMANEJO DE ERRORES\n- Si Update_client falla: \"Hubo un problema guardando. Déjame intentar de nuevo.\" → Reintenta 1 vez → Si falla: \"Parece que hay un problema técnico. Déjame conectarte con soporte.\"\n- Si da info contradictoria: \"Me mencionaste antes [X], ahora dices [Y]. ¿Cuál prefieres?\""
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -1200,
+        -496
+      ],
+      "id": "fb42360f-2c2b-4166-bb8b-aa4843130239",
+      "name": "Business Profile Agent"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "WhatsApp Trigger": {
+      "main": [
+        [
+          {
+            "node": "If3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Business Profile Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Get row(s)1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Insert new user",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert new user": {
+      "main": [
+        [
+          {
+            "node": "Starting Onboarding",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Starting Onboarding",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "User exist": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Audio Download link ": {
+      "main": [
+        [
+          {
+            "node": "Download image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Business Profile Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze image": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download image": {
+      "main": [
+        [
+          {
+            "node": "Analyze image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update_client": {
+      "ai_tool": [
+        [
+          {
+            "node": "Business Profile Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Business Profile Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Post Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "Post Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "If4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Switch2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Starting Onboarding": {
+      "main": [
+        [
+          {
+            "node": "Switch2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Post Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If3": {
+      "main": [
+        [
+          {
+            "node": "User exist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s)1": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create Audio Download link ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Make_Facebook_Post": {
+      "ai_tool": [
+        [
+          {
+            "node": "Post Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create_Facebook_Image": {
+      "ai_tool": [
+        [
+          {
+            "node": "Post Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Send message1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Post Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Send Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update_client1": {
+      "ai_tool": [
+        [
+          {
+            "node": "Post Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If4": {
+      "main": [
+        [
+          {
+            "node": "If5",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Feedback Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory2": {
+      "ai_memory": [
+        [
+          {
+            "node": "Feedback Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save_Feedback": {
+      "ai_tool": [
+        [
+          {
+            "node": "Feedback Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If5": {
+      "main": [
+        [
+          {
+            "node": "Send message3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Feedback Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Feedback Agent": {
+      "main": [
+        [
+          {
+            "node": "Send message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post Agent": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Business Profile Agent": {
+      "main": [
+        [
+          {
+            "node": "Send message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "0e2950c1-4d38-49f5-9b41-c93b400b3b97",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "053e45b0046ccb91c38e2ee0d3d4af557a2910ad5008f78fd58dd7b29bacb45d"
+  },
+  "id": "Y38sSzH6TwHMbU4s",
+  "tags": []
+}
