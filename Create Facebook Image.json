@@ -1,0 +1,159 @@
+{
+  "name": "Create Facebook Image",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "Image_Prompt"
+            },
+            {
+              "name": "WaID"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -176,
+        176
+      ],
+      "id": "a0336173-08bc-40f0-af6e-ed7eccd23189",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "modelId": {
+          "__rl": true,
+          "value": "models/imagen-4.0-fast-generate-001",
+          "mode": "list",
+          "cachedResultName": "models/imagen-4.0-fast-generate-001"
+        },
+        "prompt": "={{ $json.Image_Prompt }}",
+        "options": {
+          "sampleCount": 1,
+          "binaryPropertyOutput": "=data"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        48,
+        176
+      ],
+      "id": "1d371df1-4c59-4f78-b244-fa77a107a7de",
+      "name": "Generate an image",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2WDXUry3HpLJAnQZ",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "={{ $('When Executed by Another Workflow').item.json.WaID + \" \" +$now.format('yyyy-MM-dd hh:mm:ss')}}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1fECLxe_eBcocY8qkSXpOU3t2k2hzmigG",
+          "mode": "list",
+          "cachedResultName": "AutoSocial",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1fECLxe_eBcocY8qkSXpOU3t2k2hzmigG"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        272,
+        176
+      ],
+      "id": "26f3a850-1d71-48ac-ba52-aee8473344f7",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "fs5iKhcCUZY4vMeW",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "878acc1f-91d6-4dd3-bb1d-5d2f24cce938",
+              "name": "driveId",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        176
+      ],
+      "id": "1722661f-44a0-4f0b-978c-f11a94b9b44f",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Generate an image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate an image": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f69a2011-68d2-4933-be8b-dc79c55984f2",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "053e45b0046ccb91c38e2ee0d3d4af557a2910ad5008f78fd58dd7b29bacb45d"
+  },
+  "id": "gxhqW8icmrWhvef2",
+  "tags": []
+}
